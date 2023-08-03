@@ -18,8 +18,7 @@ def gsutil_getsize(url=''):
 
 def attempt_download(file, repo='WongKinYiu/yolov7'):
     # Attempt file download if does not exist
-    file = Path(str(file).strip().replace("'", '').lower())
-
+    file = Path(file.strip().replace("'", ''))
     if not file.exists():
         try:
             response = requests.get(f'https://api.github.com/repos/{repo}/releases/latest').json()  # github api
@@ -47,7 +46,7 @@ def attempt_download(file, repo='WongKinYiu/yolov7'):
                 os.system(f'curl -L {url} -o {file}')  # torch.hub.download_url_to_file(url, weights)
             finally:
                 if not file.exists() or file.stat().st_size < 1E6:  # check
-                    file.unlink(missing_ok=True)  # remove partial downloads
+                    file.unlink()  # remove partial downloads
                     print(f'ERROR: Download failure: {msg}')
                 print('')
                 return
